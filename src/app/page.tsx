@@ -1,5 +1,5 @@
 import { auth0 } from "@/lib/auth0";
-import { ChatBox } from "./components/ChatBox";
+import { ChatBox } from "./components/Chatbox";
 
 export default async function Home() {
   const session = await auth0.getSession();
