@@ -3,5 +3,5 @@ interface AppConfig {
 }
 
 export const appConfig: AppConfig = {
-  aiFunctionEndpoint: process.env.NEXT_PUBLIC_AI_FUNCTION_ENDPOINT,
+  aiFunctionEndpoint: process.env.AI_FUNCTION_ENDPOINT,
 };
