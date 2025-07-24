@@ -5,8 +5,8 @@
     "packageVersions": {},
     "actionVersions": {
       "cloud/askAi": {
-        "digest": "ae619ab6f810a0dc5fcc228565042ef96a4aaf172bfe52ec8b15130338798e51",
-        "version": "0.0.7"
+        "digest": "278df9332942516970528e7e85580cad336d7ce894004980848e2527f8084e28",
+        "version": "0.0.12"
       }
     }
   }
