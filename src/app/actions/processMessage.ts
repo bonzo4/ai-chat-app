@@ -1,42 +1,40 @@
 "use server";
 
 import { appConfig } from "@/lib/config";
+import { Chat } from "@/lib/types";
 
 interface Options {
   inputValue: string;
+  chatHistory: Chat[];
 }
 
 interface SuccessResponse {
   ok: true;
   content: string;
-  retrieval?: Record<string, unknown>;
-  full_response?: Record<string, unknown>;
+  // retrieval?: Record<string, unknown>;
+  // full_response?: Record<string, unknown>;
 }
 
 interface ErrorResponse {
   ok: false;
   error: string;
-  error_type: string;
 }
 
 type ProcessMessageResponse = SuccessResponse | ErrorResponse;
 
 export async function processMessage({
   inputValue,
+  chatHistory,
 }: Options): Promise<ProcessMessageResponse> {
   if (!appConfig.aiFunctionEndpoint) {
     throw Error("Invalid AI function endpoint.");
   }
 
-  const uri = appConfig.aiFunctionEndpoint + "?input_value=" + inputValue;
-
-  const response = await fetch(encodeURI(uri), {
+  const response = await fetch(appConfig.aiFunctionEndpoint, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ user_input: inputValue }),
+    body: JSON.stringify({ inputValue, chatHistory }),
   });
-
-  console.log(response.body);
 
   const data = await response.json();
 

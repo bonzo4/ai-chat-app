@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, FormEvent, SetStateAction } from "react";
 
 interface Options {
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
   isLoading: boolean;
-  handleSendMessage: () => void;
+  handleSendMessage: (e: FormEvent) => void;
 }
 
 export default function ChatInput({

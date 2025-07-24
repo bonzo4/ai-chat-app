@@ -1,21 +1,18 @@
 "use client";
-import { useState } from "react";
-import { ChatBubble } from "./ChatBubble";
+import { FormEvent, useState } from "react";
 import { processMessage } from "../actions/processMessage";
 import ChatInput from "./ChatInput";
-
-type Chat = {
-  text: string;
-  isUser: boolean;
-  timestamp?: string;
-};
+import { Chat } from "@/lib/types";
+import ChatHistory from "./ChatHistory";
+import ChatHeader from "./ChatHeader";
 
 export function ChatBox() {
   const [chats, setChats] = useState<Chat[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (e: FormEvent) => {
+    e.preventDefault();
     if (!inputValue.trim()) return;
 
     const message: Chat = {
@@ -27,12 +24,13 @@ export function ChatBox() {
       }),
     };
 
-    setChats((prev) => [...prev, message]);
+    const newChats = [...chats, message];
+    setChats(newChats);
     setInputValue("");
     setIsLoading(true);
 
     try {
-      const data = await processMessage({ inputValue });
+      const data = await processMessage({ inputValue, chatHistory: newChats });
 
       if (!data.ok) {
         throw Error("Failed fetching from endpoint.");
@@ -63,39 +61,10 @@ export function ChatBox() {
   };
 
   return (
-    <div className="mx-auto flex h-full max-w-4xl flex-col">
-      <div className="flex-1 space-y-2 overflow-y-auto p-4">
-        {chats.length === 0 ? (
-          <div className="mt-8 text-center text-gray-500">
-            <p>Start a conversation by typing a message below.</p>
-          </div>
-        ) : (
-          chats.map((chat, index) => (
-            <ChatBubble
-              key={index}
-              text={chat.text}
-              isUser={chat.isUser}
-              timestamp={chat.timestamp}
-            />
-          ))
-        )}
-        {isLoading && (
-          <div className="mb-4 flex justify-start">
-            <div className="rounded-lg rounded-bl-none bg-gray-200 px-4 py-2 text-gray-800">
-              <div className="flex space-x-1">
-                <div className="h-2 w-2 animate-bounce rounded-full bg-gray-500"></div>
-                <div
-                  className="h-2 w-2 animate-bounce rounded-full bg-gray-500"
-                  style={{ animationDelay: "0.1s" }}
-                ></div>
-                <div
-                  className="h-2 w-2 animate-bounce rounded-full bg-gray-500"
-                  style={{ animationDelay: "0.2s" }}
-                ></div>
-              </div>
-            </div>
-          </div>
-        )}
+    <div className="mx-auto flex h-screen max-w-4xl flex-col">
+      <ChatHeader />
+      <ChatHistory chats={chats} isLoading={isLoading} />
+      <div className="border-t bg-white p-4">
         <ChatInput
           inputValue={inputValue}
           setInputValue={setInputValue}
